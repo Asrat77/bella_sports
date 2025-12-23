@@ -31,3 +31,12 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+# Client
+/client/node_modules
+/client/.next
+/client/out
+/client/build
+/client/.env*
+/client/.vercel
+/client/*.log
+/client/.DS_Store
