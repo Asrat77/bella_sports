@@ -130,4 +130,4 @@ SMTP_PASSWORD=your_smtp_password
 
 ## License
 
-© 2025 Bella Sports. All rights reserved.
+© 2025 Bella Sports. All rights reserved.# bella_sports
