@@ -28,7 +28,7 @@ Rails.application.routes.draw do
     resources :admins do
       member do
         post :magic_link
-        get :verify / :token, to: "admins#verify"
+        get "verify/:token", to: "admins#verify", as: :verify
       end
     end
 
