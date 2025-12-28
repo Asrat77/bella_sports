@@ -14,6 +14,8 @@ export interface User {
     store_credit_balance: number;
     store_credit_in_etb: number;
     telegram_notification_available?: boolean;
+    phoneVerified?: boolean;
+    requiresPhoneVerification?: boolean;
 }
 
 export interface UserSession {
