@@ -14,7 +14,7 @@ class Api::V1::ProductsController < Api::V1::BaseController
     # Start with active products only
     data = @clazz.active
 
-    index do
+    super do
       data
     end
   end
