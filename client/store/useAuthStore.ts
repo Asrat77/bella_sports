@@ -65,5 +65,5 @@ export const useAuthStore = create<AuthStore>()(
 
 export const getAuthHeaders = () => {
     const { token } = useAuthStore.getState();
-    return token ? { Authorization: `Bearer ${token}` } : {};
+    return token ? { Authorization: `Bearer ${token}` } : undefined;
 };
