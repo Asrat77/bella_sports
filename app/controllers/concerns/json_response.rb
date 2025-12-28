@@ -7,11 +7,23 @@ module JsonResponse
     # Determine serializer
     serializer = determine_serializer(data)
 
-    # Render with ActiveModel::Serializer
-    render(
-      json: serializer.new(data, serializer_options).as_json,
-      status: status
-    )
+    if data.is_a?(ActiveRecord::Relation) || data.is_a?(Array)
+      # For collections, use CollectionSerializer
+      render(
+        json: ActiveModel::Serializer::CollectionSerializer.new(
+          data,
+          serializer: serializer,
+          **serializer_options
+        ).as_json,
+        status: status
+      )
+    else
+      # For single objects
+      render(
+        json: serializer ? serializer.new(data, serializer_options).as_json : data,
+        status: status
+      )
+    end
   end
 
   def render_error(error: nil, errors: nil, status: :internal_server_error)
@@ -24,6 +36,10 @@ module JsonResponse
     end
 
     render json: response_data, status: status
+  end
+
+  def render_unauthorized(error: "Unauthorized")
+    render_error(error: error, status: :unauthorized)
   end
 
   def determine_serializer(data)
