@@ -13,9 +13,11 @@ const nextConfig = {
         ],
     },
     async rewrites() {
-        const apiUrl = process.env.NODE_ENV === 'production' 
-            ? 'https://3dcf1bf9af48.ngrok-free.app/api/:path*' 
-            : 'http://127.0.0.1:3001/api/:path*';
+        // Use environment variable with fallback to ngrok for development
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 
+            (process.env.NODE_ENV === 'production' 
+                ? 'https://3dcf1bf9af48.ngrok-free.app/api/:path*' 
+                : 'http://127.0.0.1:3001/api/:path*');
         
         return [
             {
