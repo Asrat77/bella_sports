@@ -1,0 +1,162 @@
+.accountContainer {
+    min-height: 100vh;
+    background: var(--bg-gradient-hero);
+    padding: var(--space-xl) var(--space-md);
+    color: var(--text-primary);
+}
+
+.maxContainer {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-2xl);
+}
+
+.title {
+    font-family: var(--font-heading);
+    font-size: var(--text-4xl);
+    color: var(--accent-gold);
+}
+
+.profileCard {
+    background: var(--bg-dark-card);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 2px solid var(--accent-gold);
+}
+
+.avatarPlaceholder {
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radius-full);
+    background: var(--primary-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-3xl);
+    font-weight: bold;
+    color: var(--accent-gold);
+    border: 2px solid var(--accent-gold);
+}
+
+.userInfo h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-xs);
+}
+
+.userInfo p {
+    color: var(--text-secondary);
+    font-family: var(--font-accent);
+}
+
+.creditCard {
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    border: 1px solid var(--primary-green-light);
+    box-shadow: var(--shadow-xl);
+}
+
+.creditLabel {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: var(--text-sm);
+    color: var(--accent-gold-light);
+    margin-bottom: var(--space-sm);
+}
+
+.creditValue {
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.actionsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+}
+
+.actionItem {
+    background: var(--bg-dark-elevated);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.actionItem:hover {
+    background: var(--bg-dark-card);
+    border-color: var(--accent-red);
+    transform: translateY(-4px);
+}
+
+.iconWrapper {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-gold);
+}
+
+.actionText h3 {
+    font-size: var(--text-lg);
+    margin-bottom: 2px;
+}
+
+.actionText p {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+}
+
+.logoutBtn {
+    background: transparent;
+    border: 1px solid var(--accent-red);
+    color: var(--accent-red);
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.logoutBtn:hover {
+    background: var(--accent-red);
+    color: white;
+}
+
+@media (max-width: 640px) {
+    .profileCard {
+        flex-direction: column;
+        text-align: center;
+        padding: var(--space-lg);
+    }
+}

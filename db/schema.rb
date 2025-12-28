@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_23_120022) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_28_050918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -166,6 +166,37 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_23_120022) do
     t.index ["league"], name: "index_products_on_league"
   end
 
+  create_table "user_sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "last_used_at"
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["expires_at"], name: "index_user_sessions_on_expires_at"
+    t.index ["token"], name: "index_user_sessions_on_token", unique: true
+    t.index ["user_id"], name: "index_user_sessions_on_user_id"
+  end
+
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "first_name", null: false
+    t.string "last_name"
+    t.string "phone_number"
+    t.string "photo_url"
+    t.integer "store_credit_balance", default: 0, null: false
+    t.string "telegram_id", null: false
+    t.datetime "updated_at", null: false
+    t.string "username"
+    t.index ["active"], name: "index_users_on_active"
+    t.index ["email"], name: "index_users_on_email"
+    t.index ["phone_number"], name: "index_users_on_phone_number"
+    t.index ["telegram_id"], name: "index_users_on_telegram_id", unique: true
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "user_sessions", "users"
 end

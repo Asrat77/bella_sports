@@ -19,6 +19,12 @@ Rails.application.routes.draw do
       end
 
       resources :branches, only: [ :index ]
+
+      # User Authentication
+      namespace :auth do
+        post :telegram_callback
+        get :me
+      end
     end
   end
 
