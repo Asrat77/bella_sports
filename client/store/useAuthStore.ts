@@ -14,6 +14,8 @@ export interface User {
     store_credit_balance: number;
     store_credit_in_etb: number;
     telegram_notification_available?: boolean;
+    phoneVerified?: boolean;
+    requiresPhoneVerification?: boolean;
 }
 
 export interface UserSession {
@@ -63,5 +65,5 @@ export const useAuthStore = create<AuthStore>()(
 
 export const getAuthHeaders = () => {
     const { token } = useAuthStore.getState();
-    return token ? { Authorization: `Bearer ${token}` } : {};
+    return token ? { Authorization: `Bearer ${token}` } : undefined;
 };

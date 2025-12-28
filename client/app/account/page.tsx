@@ -1,6 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import TelegramLoginButton from '@/components/auth/TelegramLoginButton';
+import PhoneVerificationPrompt from '@/components/auth/PhoneVerificationPrompt';
 import { useAuthStore } from '@/store/useAuthStore';
 import { LogOut, ShoppingBag, Heart, Package } from 'lucide-react';
 import Link from 'next/link';
@@ -8,6 +10,14 @@ import styles from './Account.module.css';
 
 export default function AccountPage() {
     const { isAuthenticated, user, logout } = useAuthStore();
+    const [showPhonePrompt, setShowPhonePrompt] = useState(false);
+
+    // Show phone verification prompt immediately after login if needed
+    useEffect(() => {
+        if (isAuthenticated && user && user.requiresPhoneVerification && !showPhonePrompt) {
+            setShowPhonePrompt(true);
+        }
+    }, [isAuthenticated, user, showPhonePrompt]);
 
     if (!isAuthenticated || !user) {
         return (
@@ -27,6 +37,11 @@ export default function AccountPage() {
 
     return (
         <div className={styles.accountContainer}>
+            {/* Phone verification prompt overlay */}
+            {showPhonePrompt && (
+                <PhoneVerificationPrompt onDismiss={() => setShowPhonePrompt(false)} />
+            )}
+            
             <div className={styles.maxContainer}>
                 <header className={styles.header}>
                     <h1 className={styles.title}>Account Dashboard</h1>
@@ -47,6 +62,31 @@ export default function AccountPage() {
                     <div className={styles.userInfo}>
                         <h2>{user.full_name}</h2>
                         {user.username && <p>@{user.username}</p>}
+                        
+                        {/* Phone verification status */}
+                        <div style={{ marginTop: 'var(--space-sm)' }}>
+                            {user.phoneVerified ? (
+                                <div style={{ 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '6px',
+                                    color: 'var(--primary-green-light)',
+                                    fontSize: '0.875rem'
+                                }}>
+                                    ✓ Phone Verified
+                                </div>
+                            ) : (
+                                <div style={{ 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '6px',
+                                    color: 'var(--primary-amber-light)',
+                                    fontSize: '0.875rem'
+                                }}>
+                                    ⚠ Phone Verification Required
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </section>
 
