@@ -49,45 +49,42 @@ export default function TelegramLoginButton({
     onLoginError,
     children,
 }: TelegramLoginButtonProps) {
-    const scriptRef = useRef<HTMLScriptElement | null>(null);
-    const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
     const { login } = useAuthStore();
 
     useEffect(() => {
-        if (isScriptLoaded) return;
+        const container = containerRef.current;
+        if (!container || !botUsername) return;
+
+        // Skip if script is already there
+        if (container.querySelector('script')) return;
+
+        // Define global callback matching user's snippet structure
+        (window as any).onTelegramAuth = (user: TelegramAuthData) => {
+            // Optional: Alert as requested by user for verification
+            // alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
+
+            handleTelegramAuth(user);
+        };
 
         const script = document.createElement('script');
         script.src = 'https://telegram.org/js/telegram-widget.js?22';
         script.setAttribute('data-telegram-login', botUsername);
         script.setAttribute('data-size', 'large');
-        script.setAttribute('data-radius', '8');
-        script.setAttribute('data-userpic', 'true');
+        script.setAttribute('data-onauth', 'onTelegramAuth(user)');
         script.setAttribute('data-request-access', 'write');
         script.async = true;
 
-        const handleAuthMessage = (event: MessageEvent) => {
-            if (event.origin !== 'https://telegram.org') return;
-            
-            try {
-                const authData = event.data;
-                
-                if (authData && typeof authData === 'object' && 'id' in authData) {
-                    handleTelegramAuth(authData as TelegramAuthData);
-                }
-            } catch (error) {
-                console.error('Error parsing Telegram auth data:', error);
-                onLoginError?.('Failed to process authentication');
-            }
-        };
-
-        window.addEventListener('message', handleAuthMessage);
-        scriptRef.current = script;
-        setIsScriptLoaded(true);
+        container.appendChild(script);
 
         return () => {
-            window.removeEventListener('message', handleAuthMessage);
-            if (scriptRef.current && scriptRef.current.parentNode) {
-                scriptRef.current.parentNode.removeChild(scriptRef.current);
+            // Cleanup global callback and script element only
+            delete (window as any).onTelegramAuth;
+            if (container) {
+                const script = container.querySelector('script[src*="telegram-widget.js"]');
+                if (script) {
+                    script.remove();
+                }
             }
         };
     }, [botUsername, onLoginError]);
@@ -111,21 +108,13 @@ export default function TelegramLoginButton({
             login(sessionData);
             onLoginSuccess?.(sessionData);
         } catch (error) {
-            console.error('Telegram authentication error:', error);
             onLoginError?.(error instanceof Error ? error.message : 'Authentication failed');
         }
     };
 
     return (
         <div className={`telegram-login-button ${className}`}>
-            <div
-                id="telegram-login-widget"
-                data-telegram-login={botUsername}
-                data-size="large"
-                data-radius="8"
-                data-request-access="write"
-                data-userpic="true"
-            />
+            <div ref={containerRef} className="flex justify-center" />
             {children && <div className="custom-login-button">{children}</div>}
         </div>
     );
