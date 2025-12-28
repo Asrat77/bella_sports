@@ -55,6 +55,6 @@ class TelegramAuthService
   end
 
   def self.telegram_bot_token
-    Rails.application.credentials.telegram_bot_token
+    ENV["TELEGRAM_BOT_TOKEN"] || Rails.application.credentials.telegram_bot_token
   end
 end
