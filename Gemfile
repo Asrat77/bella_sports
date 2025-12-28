@@ -52,3 +52,9 @@ end
 # Bella Sports API dependencies
 gem "active_model_serializers", "~> 0.10.0"  # JSON serialization
 gem "pg_search"                              # Full-text search for PostgreSQL
+
+gem "dotenv-rails", "~> 3.2", group: :development
+gem "test", "~> 1.0", group: :development
+
+# MCP servers for AI development assistance
+gem "rails-mcp-server", "~> 1.2", group: :development
