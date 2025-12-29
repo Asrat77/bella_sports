@@ -44,3 +44,52 @@
 - Follow existing patterns in codebase
 - **Ship to validate** - prototype quality is valid for learning
 - **Vanilla Rails over abstractions** - avoid premature extraction
+
+## 37signals Patterns Learned from Codebase
+
+### Core Patterns Implemented
+1. **State as records, not booleans**: Order status is a separate `order_statuses` table with `creator_id`, not a status column. `Statusable` concern defines `STATUS_TRANSITIONS` hash and `update_status!` method.
+
+2. **Rich models with concerns**: Product includes Badgeable, Inventoryable, Searchable concerns. Each concern is 40-100 lines, focused on specific behavior.
+
+3. **Thin controllers, rich models**: `OrdersController.create` just calls `Order#add_item`. Business logic lives in models.
+
+4. **UUID primary keys**: All tables use `id: :uuid, default: -> { "gen_random_uuid()" }` for security and distribution.
+
+5. **Database-backed everything**: Solid Queue/Cache/Cable instead of Redis. Good for simplicity and deployment.
+
+6. **params.expect**: Using Rails 8's new params API: `params.expect(order: [:customer_name, :customer_phone, { items: [...] }])`
+
+7. **Concerns for organization**: Controller concerns (Pagination, JsonResponse, Filterable, Authenticatable) mixed into Common module.
+
+8. **Bang methods in controllers**: `add_item!`, `find_by_tracking!` - let it crash approach.
+
+### Where Bella Sports Differs from 37signals Guide
+- Uses React/Next.js instead of Turbo+Stimulus (legitimate choice for this project's needs)
+- Next.js API proxy for local development (convenience, not strictly necessary)
+- Active Model Serializers instead of plain Rails rendering (more explicit control)
+
+## Commit Conventions
+- Mix of conventional commits (feat:, chore:, docs:, style:, fix:) and descriptive messages
+- Single contributor (Asrat) - no team conventions yet
+- Branch strategy: feature branches merged to master, no PR workflow enforced
+
+## Code Style
+- Ruby: rubocop-rails-omakase (37signals omakase style)
+- TypeScript: Strict TypeScript, proper interfaces, import order: React/Next.js → third-party → local
+- Component files: PascalCase, co-located CSS modules
+
+## Known Issues/Gaps
+- Admin controllers not yet implemented (routes defined in routes.rb but no controller files)
+- CI only runs Ruby checks (Brakeman, Bundler-audit, RuboCop) - no frontend lint/type-check in CI
+- Frontend next.config has ignoreBuildErrors: true and ignoreDuringBuilds: true for lint/TS
+
+## Git Setup
+- Local branch: feature/telegram-user-authentication
+- Remote branches: master, agent-404-error-b214, feature/telegram-user-authentication, dependabot/*
+- Main branch is master (not main)
+
+## Development Notes
+- CORS configured for localhost:3000 (frontend) and bellasports.com (production)
+- Development uses letter_opener_web for mailer preview
+- Allowed hosts include ngrok and netlify for tunnel testing
