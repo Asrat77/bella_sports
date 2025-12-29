@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_28_050918) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_28_154000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -185,14 +185,18 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_28_050918) do
     t.string "first_name", null: false
     t.string "last_name"
     t.string "phone_number"
+    t.string "phone_verification_method", default: "telegram_bot"
+    t.datetime "phone_verified_at", precision: nil
     t.string "photo_url"
     t.integer "store_credit_balance", default: 0, null: false
+    t.string "telegram_chat_id"
     t.string "telegram_id", null: false
     t.datetime "updated_at", null: false
     t.string "username"
     t.index ["active"], name: "index_users_on_active"
     t.index ["email"], name: "index_users_on_email"
     t.index ["phone_number"], name: "index_users_on_phone_number"
+    t.index ["telegram_chat_id"], name: "index_users_on_telegram_chat_id"
     t.index ["telegram_id"], name: "index_users_on_telegram_id", unique: true
   end
 

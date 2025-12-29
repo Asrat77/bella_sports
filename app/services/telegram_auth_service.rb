@@ -45,13 +45,101 @@ class TelegramAuthService
   end
 
   def self.find_or_create_user!(telegram_id, first_name, last_name, username, photo_url)
-    User.find_or_create_by!(telegram_id: telegram_id) do |user|
-      user.first_name = first_name
-      user.last_name = last_name
-      user.username = username
-      user.photo_url = photo_url
-      user.active = true
+    user = User.find_or_create_by!(telegram_id: telegram_id) do |u|
+      u.first_name = first_name
+      u.last_name = last_name
+      u.username = username
+      u.photo_url = photo_url
+      u.active = true
     end
+
+    # Send verification request message via Telegram bot immediately after user creation
+    # Also send reminder if existing user has unverified phone
+    if user.phone_number.blank?
+      send_verification_request_message(user)
+    elsif !user.phone_verified_at?
+      send_existing_user_reminder(user)
+    end
+  end
+
+  def self.send_verification_request_message(user)
+    bot = TelegramBotService.bot
+
+    message_text = <<~TEXT
+      🔔 Welcome to Bella Sports!
+
+      To complete your account setup and enable all features, please verify your phone number.
+
+      This is required for:
+      • Order confirmations and delivery updates
+      • Customer support communication
+      • Full account access
+
+      Click the button below to share your contact information securely.
+    TEXT
+
+    keyboard = [
+      [
+        Telegram::Bot::Types::KeyboardButton.new(
+          text: "📱 Verify Phone Number",
+          request_contact: true
+        )
+      ]
+    ]
+
+    reply_markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(
+      keyboard: keyboard,
+      resize_keyboard: true,
+      one_time_keyboard: true
+    )
+
+    bot.api.send_message(
+      chat_id: user.telegram_id,
+      text: message_text,
+      reply_markup: reply_markup
+    )
+  rescue => e
+    Rails.logger.error "Error sending verification request: #{e.message}"
+  end
+
+  def self.send_existing_user_reminder(user)
+    bot = TelegramBotService.bot
+
+    message_text = <<~TEXT
+      ⚠️ Phone Verification Reminder
+
+      Hello! We noticed you haven't verified your phone number yet.
+
+      Please verify your phone to enable:
+      • Order confirmations and delivery updates
+      • Customer support communication
+      • Full account access
+
+      Click the button below to share your contact securely.
+    TEXT
+
+    keyboard = [
+      [
+        Telegram::Bot::Types::KeyboardButton.new(
+          text: "📱 Verify Phone Number",
+          request_contact: true
+        )
+      ]
+    ]
+
+    reply_markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(
+      keyboard: keyboard,
+      resize_keyboard: true,
+      one_time_keyboard: true
+    )
+
+    bot.api.send_message(
+      chat_id: user.telegram_id,
+      text: message_text,
+      reply_markup: reply_markup
+    )
+  rescue => e
+    Rails.logger.error "Error sending verification reminder: #{e.message}"
   end
 
   def self.telegram_bot_token

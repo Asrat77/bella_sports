@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   # Public API
   namespace :api do
     namespace :v1 do
+      get "profile/update"
       resources :products, only: [ :index, :show ] do
         collection do
           get :search
@@ -25,6 +26,9 @@ Rails.application.routes.draw do
         post :telegram_callback
         get :me
       end
+
+      # Telegram Bot Webhook
+      resources :telegram_webhooks, only: [ :create ]
     end
   end
 
