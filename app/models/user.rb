@@ -5,7 +5,7 @@ class User < ApplicationRecord
   validates :telegram_id, presence: true, uniqueness: true
   validates :first_name, presence: true
   validates :email, uniqueness: { allow_blank: true }
-  validates :phone_number, uniqueness: { allow_blank: true }, format: { with: /\A\d{9}\z/, allow_blank: true }
+  validates :phone_number, uniqueness: { allow_blank: true }, format: { with: /\A\d{7,15}\z/, allow_blank: true }
 
   scope :active, -> { where(active: true) }
 
@@ -39,5 +39,13 @@ class User < ApplicationRecord
 
   def telegram_notification_available?
     username.present?
+  end
+
+  def phone_verified?
+    phone_number.present? && phone_verified_at.present?
+  end
+
+  def requires_phone_verification?
+    !phone_verified?
   end
 end
