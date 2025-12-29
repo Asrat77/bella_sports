@@ -3,12 +3,26 @@ class Api::V1::AuthController < Api::V1::BaseController
   rescue_from TelegramAuthService::VerificationError, with: :render_verification_error
 
   def telegram_callback
-    auth_data = telegram_auth_params.to_h.symbolize_keys
+    auth_data = telegram_auth_params
+
+    # Validate required fields are present
+    required_fields = [ :id, :first_name, :auth_date, :hash ]
+    missing_fields = required_fields.select { |field| auth_data[field].blank? }
+
+    if missing_fields.any?
+      render json: { error: "Missing required fields: #{missing_fields.join(", ")}" }, status: :unprocessable_entity
+      return
+    end
 
     user = TelegramAuthService.verify_and_create_user!(auth_data)
     session = user.generate_session!
 
-    render_success(data: session, serializer_options: { user: user })
+    render_success(
+      data: session,
+      serializer_options: {
+        user: user
+      }
+    )
   end
 
   def me
@@ -20,7 +34,7 @@ class Api::V1::AuthController < Api::V1::BaseController
   private
 
   def telegram_auth_params
-    params.expect(telegram_auth: [ :id, :first_name, :last_name, :username, :photo_url, :auth_date, :hash ])[:telegram_auth] || {}
+    params.permit(:id, :first_name, :last_name, :username, :photo_url, :auth_date, :hash).to_h.symbolize_keys
   end
 
   def render_verification_error(exception)
