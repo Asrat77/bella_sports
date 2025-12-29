@@ -32,17 +32,20 @@ interface AuthStore {
     isAuthenticated: boolean;
     user: User | null;
     token: string | null;
+    isValidating: boolean;
     login: (authData: UserSession) => void;
     logout: () => void;
     updateUser: (updates: Partial<User>) => void;
+    validateSession: () => Promise<boolean>;
 }
 
 export const useAuthStore = create<AuthStore>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             isAuthenticated: false,
             user: null,
             token: null,
+            isValidating: false,
             login: (authData) => set({
                 isAuthenticated: true,
                 user: authData.user,
@@ -52,13 +55,44 @@ export const useAuthStore = create<AuthStore>()(
                 isAuthenticated: false,
                 user: null,
                 token: null,
+                isValidating: false,
             }),
             updateUser: (updates) => set((state) => ({
                 user: state.user ? { ...state.user, ...updates } : null,
             })),
+            validateSession: async () => {
+                const { token, isAuthenticated } = get();
+                if (!token || !isAuthenticated) return false;
+
+                set({ isValidating: true });
+                try {
+                    // We import dynamically to avoid circular dependency since api.ts imports useAuthStore
+                    const { fetchWithAuth } = await import('@/lib/api');
+                    const response = await fetchWithAuth('/api/v1/auth/me');
+
+                    if (response.ok) {
+                        const { data } = await response.json();
+                        set({ user: data, isAuthenticated: true, isValidating: false });
+                        return true;
+                    } else {
+                        // handle unauthorized or other errors
+                        get().logout();
+                        return false;
+                    }
+                } catch (error) {
+                    console.error('Session validation failed:', error);
+                    set({ isValidating: false });
+                    return false;
+                }
+            },
         }),
         {
             name: 'bellasport-auth',
+            partialize: (state) => ({
+                isAuthenticated: state.isAuthenticated,
+                user: state.user,
+                token: state.token,
+            }),
         }
     )
 );

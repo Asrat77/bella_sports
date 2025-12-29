@@ -9,8 +9,15 @@ import Link from 'next/link';
 import styles from './Account.module.css';
 
 export default function AccountPage() {
-    const { isAuthenticated, user, logout } = useAuthStore();
+    const { isAuthenticated, user, logout, validateSession, isValidating } = useAuthStore();
     const [showPhonePrompt, setShowPhonePrompt] = useState(false);
+
+    // Validate session on mount
+    useEffect(() => {
+        if (isAuthenticated) {
+            validateSession();
+        }
+    }, [isAuthenticated, validateSession]);
 
     // Show phone verification prompt immediately after login if needed
     useEffect(() => {
@@ -18,6 +25,16 @@ export default function AccountPage() {
             setShowPhonePrompt(true);
         }
     }, [isAuthenticated, user, showPhonePrompt]);
+
+    if (isValidating && !user) {
+        return (
+            <div className={styles.accountContainer}>
+                <div className={styles.maxContainer} style={{ textAlign: 'center', paddingTop: '10vh' }}>
+                    <div className={styles.loadingPulse}>Validating session...</div>
+                </div>
+            </div>
+        );
+    }
 
     if (!isAuthenticated || !user) {
         return (
@@ -41,7 +58,7 @@ export default function AccountPage() {
             {showPhonePrompt && (
                 <PhoneVerificationPrompt onDismiss={() => setShowPhonePrompt(false)} />
             )}
-            
+
             <div className={styles.maxContainer}>
                 <header className={styles.header}>
                     <h1 className={styles.title}>Account Dashboard</h1>
@@ -62,13 +79,13 @@ export default function AccountPage() {
                     <div className={styles.userInfo}>
                         <h2>{user.full_name}</h2>
                         {user.username && <p>@{user.username}</p>}
-                        
+
                         {/* Phone verification status */}
                         <div style={{ marginTop: 'var(--space-sm)' }}>
                             {user.phoneVerified ? (
-                                <div style={{ 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
                                     gap: '6px',
                                     color: 'var(--primary-green-light)',
                                     fontSize: '0.875rem'
@@ -76,9 +93,9 @@ export default function AccountPage() {
                                     ✓ Phone Verified
                                 </div>
                             ) : (
-                                <div style={{ 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
                                     gap: '6px',
                                     color: 'var(--primary-amber-light)',
                                     fontSize: '0.875rem'
