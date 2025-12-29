@@ -17,14 +17,11 @@ class User < ApplicationRecord
   end
 
   def valid_session?(token)
-    user_sessions
-      .where(token: token)
-      .where("expires_at > ?", Time.current)
-      .exists?
+    user_sessions.active.exists?(token_digest: UserSession.digest(token))
   end
 
   def consume_session!(token)
-    session = user_sessions.find_by!(token: token)
+    session = user_sessions.active.find_by!(token_digest: UserSession.digest(token))
     session.update!(last_used_at: Time.current)
     session
   end
