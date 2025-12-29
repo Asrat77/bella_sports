@@ -27,9 +27,8 @@ export default function PhoneVerificationPrompt({ onDismiss }: PhoneVerification
 
         const interval = setInterval(async () => {
             try {
-                const response = await fetch('/api/v1/auth/me', {
-                    headers: getAuthHeaders()
-                });
+                const { fetchWithAuth } = await import('@/lib/api');
+                const response = await fetchWithAuth('/api/v1/auth/me');
 
                 if (response.ok) {
                     const data = await response.json();
