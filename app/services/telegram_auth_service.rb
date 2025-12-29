@@ -60,6 +60,8 @@ class TelegramAuthService
     elsif !user.phone_verified_at?
       send_existing_user_reminder(user)
     end
+
+    user 
   end
 
   def self.send_verification_request_message(user)

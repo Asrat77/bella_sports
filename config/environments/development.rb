@@ -75,5 +75,5 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
 
   # Allow specific hosts for development (including common tunneling services)
-  config.hosts = [ "localhost", "127.0.0.1", /\.ngrok\.io$/, /\.ngrok\.free\.app$/, /\.tunnelto\.dev$/ ]
+  config.hosts = [ "790dd29bd24f.ngrok-free.app", "superlative-dragon-ceecc3.netlify.app"]
 end

@@ -8,7 +8,6 @@ class UserSession < ApplicationRecord
 
   before_validation :digest_token, if: -> { token.present? }
 
-  scope :active, -> { find_by_sql("SELECT * FROM user_sessions WHERE expires_at > NOW()") } # Just kidding, let's keep it AR
   scope :active, -> { where("expires_at > ?", Time.current) }
   scope :expired, -> { where("expires_at <= ?", Time.current) }
 
