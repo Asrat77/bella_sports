@@ -1,0 +1,198 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-overlay);
+    padding: var(--space-md);
+    animation: fadeIn var(--transition-base);
+}
+
+.modal {
+    background: var(--bg-dark-card);
+    border: 1px solid rgba(252, 215, 0, 0.2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    max-width: 450px;
+    width: 100%;
+    box-shadow: var(--shadow-xl);
+    position: relative;
+    overflow: hidden;
+}
+
+.modal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.iconWrapper {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-md);
+    color: var(--accent-gold);
+}
+
+.title {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    color: var(--accent-gold);
+    margin-bottom: var(--space-xs);
+}
+
+.description {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+}
+
+.infoBox {
+    background: rgba(30, 77, 43, 0.3);
+    border: 1px solid rgba(30, 77, 43, 0.5);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-xl);
+    display: flex;
+    gap: var(--space-md);
+}
+
+.infoIcon {
+    color: var(--primary-green-light);
+    flex-shrink: 0;
+}
+
+.infoTitle {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.infoList {
+    list-style: none;
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+}
+
+.infoList li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-bottom: 2px;
+}
+
+.buttonGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.primaryButton {
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.primaryButton:hover {
+    background: var(--accent-red-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(200, 16, 46, 0.3);
+}
+
+.secondaryButton {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.secondaryButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.stepsBox {
+    margin-top: var(--space-xl);
+    padding: var(--space-md);
+    background: rgba(255, 215, 0, 0.05);
+    border-left: 3px solid var(--accent-gold);
+    border-radius: var(--radius-sm);
+}
+
+.stepsText {
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.stepsText strong {
+    color: var(--accent-gold-light);
+}
+
+.dismissButton {
+    margin-top: var(--space-md);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    text-decoration: underline;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: color var(--transition-fast);
+}
+
+.dismissButton:hover {
+    color: var(--text-secondary);
+}
+
+.loader {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--accent-gold);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

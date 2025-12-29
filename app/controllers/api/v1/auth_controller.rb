@@ -1,5 +1,6 @@
 class Api::V1::AuthController < Api::V1::BaseController
   skip_before_action :set_clazz
+  before_action :authenticate_user!, only: [:me]
   rescue_from TelegramAuthService::VerificationError, with: :render_verification_error
 
   def telegram_callback
