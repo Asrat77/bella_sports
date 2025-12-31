@@ -10,10 +10,12 @@ class User < ApplicationRecord
   scope :active, -> { where(active: true) }
 
   def generate_session!
-    user_sessions.create!(
-      token: SecureRandom.urlsafe_base64(32),
+    token = SecureRandom.urlsafe_base64(32)
+    session = user_sessions.create!(
+      token: token,
       expires_at: 30.days.from_now
     )
+    { session: session, token: token }
   end
 
   def valid_session?(token)

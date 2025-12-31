@@ -9,15 +9,15 @@ import Link from 'next/link';
 import styles from './Account.module.css';
 
 export default function AccountPage() {
-    const { isAuthenticated, user, logout, validateSession, isValidating } = useAuthStore();
+    const { isAuthenticated, user, logout, validateSession, isValidating, hasHydrated } = useAuthStore();
     const [showPhonePrompt, setShowPhonePrompt] = useState(false);
 
     // Validate session on mount
     useEffect(() => {
-        if (isAuthenticated) {
+        if (hasHydrated && isAuthenticated) {
             validateSession();
         }
-    }, [isAuthenticated, validateSession]);
+    }, [isAuthenticated, validateSession, hasHydrated]);
 
     // Show phone verification prompt immediately after login if needed
     useEffect(() => {
@@ -26,6 +26,18 @@ export default function AccountPage() {
         }
     }, [isAuthenticated, user, showPhonePrompt]);
 
+    // Show loading state while hydrating from localStorage
+    if (!hasHydrated) {
+        return (
+            <div className={styles.accountContainer}>
+                <div className={styles.maxContainer} style={{ textAlign: 'center', paddingTop: '10vh' }}>
+                    <div className={styles.loadingPulse}>Loading...</div>
+                </div>
+            </div>
+        );
+    }
+
+    // Show loading state while validating session
     if (isValidating && !user) {
         return (
             <div className={styles.accountContainer}>
