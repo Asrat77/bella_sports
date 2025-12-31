@@ -32,7 +32,7 @@ class Api::V1::AuthController < Api::V1::BaseController
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, private, max-age=0"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
-    render_success(data: current_user)
+    render(json: { data: UserSerializer.new(current_user).as_json }, status: :ok)
   end
 
   private
