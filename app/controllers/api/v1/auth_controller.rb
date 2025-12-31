@@ -1,6 +1,6 @@
 class Api::V1::AuthController < Api::V1::BaseController
   skip_before_action :set_clazz
-  before_action :authenticate_user!, only: [:me]
+  before_action :authenticate_user!, only: [ :me ]
   rescue_from TelegramAuthService::VerificationError, with: :render_verification_error
 
   def telegram_callback
@@ -16,13 +16,13 @@ class Api::V1::AuthController < Api::V1::BaseController
     end
 
     user = TelegramAuthService.verify_and_create_user!(auth_data)
-    session = user.generate_session!
+    result = user.generate_session!
+    session = result[:session]
+    token = result[:token]
 
-    render_success(
-      data: session,
-      serializer_options: {
-        user: user
-      }
+    render(
+      json: UserSessionSerializer.new(session).as_json.merge(token: token),
+      status: :ok
     )
   end
 
