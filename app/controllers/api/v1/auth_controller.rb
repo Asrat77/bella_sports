@@ -38,17 +38,15 @@ class Api::V1::AuthController < Api::V1::BaseController
   private
 
   def telegram_auth_params
-    # Start with flat fields
-    data = params.permit(:id, :first_name, :last_name, :username, :photo_url, :auth_date, :hash).to_h.symbolize_keys
+    # Permit both flat and nested auth fields
+    permitted = params.permit(:id, :first_name, :last_name, :username, :photo_url, :auth_date, :hash, auth: [ :id, :first_name, :last_name, :username, :photo_url, :auth_date, :hash ])
 
-    # If a nested auth object is provided, merge its fields too
-    if params[:auth].present?
-      begin
-        nested = params[:auth].permit(:id, :first_name, :last_name, :username, :photo_url, :auth_date, :hash).to_h.symbolize_keys
-        data.merge!(nested)
-      rescue
-        # ignore if nested can't be parsed
-      end
+    data = permitted.except(:auth).to_h.symbolize_keys
+
+    # If a nested auth object is provided, merge its fields into root
+    if permitted[:auth].present?
+      nested = permitted[:auth].to_h.symbolize_keys
+      data.merge!(nested)
     end
 
     data
