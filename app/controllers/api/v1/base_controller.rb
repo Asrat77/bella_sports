@@ -8,7 +8,7 @@ class Api::V1::BaseController < ApplicationController
   def authenticate_user!
     token = request.headers["Authorization"]&.sub(/^Bearer /, "")
     @user_session = UserSession.authenticate(token)
-    
+
     if @user_session
       @current_user = @user_session.user
       @user_session.update!(last_used_at: Time.current)

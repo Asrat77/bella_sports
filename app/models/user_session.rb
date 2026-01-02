@@ -1,6 +1,6 @@
 class UserSession < ApplicationRecord
   belongs_to :user
-  
+
   attr_accessor :token
 
   validates :token_digest, presence: true, uniqueness: true

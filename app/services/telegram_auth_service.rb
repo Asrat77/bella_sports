@@ -61,7 +61,7 @@ class TelegramAuthService
       send_existing_user_reminder(user)
     end
 
-    user 
+    user
   end
 
   def self.send_verification_request_message(user)
