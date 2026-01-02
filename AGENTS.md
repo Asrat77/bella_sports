@@ -93,3 +93,25 @@
 - CORS configured for localhost:3000 (frontend) and bellasports.com (production)
 - Development uses letter_opener_web for mailer preview
 - Allowed hosts include ngrok and netlify for tunnel testing
+
+## Supermemory Usage
+
+**Supermemory MCP is configured and available for persistent AI context across sessions.**
+
+### When to use supermemory
+- Store architecture decisions and patterns
+- Remember common workflows and commands
+- Maintain project-specific knowledge across different OpenCode sessions
+- Keep context persistent across conversations
+
+### How to use
+- Supermemory tools are automatically available when working with Bella Sports in OpenCode
+- Memories persist across different sessions and conversations
+- Context is retrieved intelligently through semantic search
+
+### Example usage prompts
+- "Remember that Bella Sports uses state-as-records pattern for order status"
+- "Remember that we use UUID primary keys for all database tables"
+- "What are the common test commands for Bella Sports?"
+- "Search supermemory for information about 37signals patterns used in this project"
+- "Remember that the frontend uses Zustand for state management"
