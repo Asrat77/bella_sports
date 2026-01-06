@@ -57,7 +57,7 @@ gem "dotenv-rails", "~> 3.2", group: :development
 gem "test", "~> 1.0", group: :development
 
 # MCP servers for AI development assistance
-gem "rails-mcp-server", "~> 1.2", group: :development
+gem "rails-mcp-server", "~> 1.5", group: :development
 
 # Telegram Bot integration for phone verification
 gem "telegram-bot-ruby", "~> 2.5", require: "telegram/bot"
